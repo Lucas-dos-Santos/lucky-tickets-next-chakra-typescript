@@ -10,9 +10,12 @@ export default function App({ Component, pageProps }: AppProps) {
   });
 
   return (
-    <ThirdwebProvider desiredChainId={ChainId.BinanceSmartChainTestNet}>
+    <ThirdwebProvider
+      activeChain="binance-testnet"
+      desiredChainId={ChainId.BinanceSmartChainTestNet}
+    >
       <ChakraProvider theme={theme}>
-        <Box w='100vw' bg='black' h='100vh'>
+        <Box w="100vw" bg="black" h="100vh">
           <Component {...pageProps} />
         </Box>
       </ChakraProvider>

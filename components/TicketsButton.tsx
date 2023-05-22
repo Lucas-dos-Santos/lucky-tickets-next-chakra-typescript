@@ -1,24 +1,28 @@
 import React from "react"
+import { ethers } from 'ethers'
 import { Button, useMediaQuery } from "@chakra-ui/react";
 import { FaCoins, FaTicketAlt } from "react-icons/fa";
 
 type TicketButtonProps = {
-  onOpen: () => void
-}
+  onOpen: () => void;
+  userTickets: number;
+  winnings: number | undefined
+};
 
-function TicketsButton({ onOpen }: TicketButtonProps) {
+function TicketsButton({ onOpen, userTickets, winnings = 0 }: TicketButtonProps) {
   const [isLargeThan780] = useMediaQuery("(min-width: 780px)");
-  const winnings = 0.5;
-  const buttonText = isLargeThan780 ? `Sacar ${winnings} BNB` : "Sacar";
+  const buttonText = isLargeThan780 ? `Sacar ${ethers.utils.formatEther(winnings.toString())} BNB` : "Sacar";
 
   return (
     <Button
-      colorScheme="yellow"
+      bg='yellow.200'
+      _hover={{ bg: 'yellow.300' }}
+      _active={{ bg: 'yellow.400' }}
       size={["sm", "sm", "sm", "md", "md", "lg"]}
-      onClick={winnings ? onOpen : () => {}}
+      onClick={winnings > 0 ? onOpen : () => {}}
       leftIcon={winnings > 0 ? <FaCoins /> : <FaTicketAlt />}
     >
-      {winnings > 0 ? buttonText : 10}
+      {winnings > 0 ? buttonText : userTickets}
     </Button>
   );
 }

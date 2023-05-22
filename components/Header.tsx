@@ -7,11 +7,21 @@ import {
   AdminsControl,
   TicketsButton
 } from "../components";
-import { useAddress } from "@thirdweb-dev/react";
 import { Flex, useDisclosure } from "@chakra-ui/react"
 
-function Header() {
-  const address = useAddress()
+type HeaderProps = {
+  userTickets: number;
+  address: string | undefined;
+  winnings: number | undefined
+  lotteryOperator: string | undefined;
+};
+
+function Header({
+  address,
+  winnings,
+  userTickets,
+  lotteryOperator
+}: HeaderProps) {
   const {
     isOpen: isOpenLoginModal,
     onOpen: onOpenLoginModal,
@@ -23,10 +33,11 @@ function Header() {
     onClose: onCloseWinningModal,
   } = useDisclosure();
 
-
   useEffect(() => {
-    if (address) { onClose() }
-  }, [address])
+    if (address) {
+      onCloseLoginModal();
+    }
+  }, [address]);
 
   return (
     <Flex
@@ -41,8 +52,15 @@ function Header() {
     >
       <Logo />
       <Flex>
-        <AdminsControl />
-        <TicketsButton onOpen={onOpenWinningModal} />
+        {address && address == lotteryOperator ? (
+          <AdminsControl />
+        ) : (
+          <TicketsButton
+            winnings={winnings}
+            userTickets={userTickets}
+            onOpen={onOpenWinningModal}
+          />
+        )}
         <LoginButton address={address} onOpen={onOpenLoginModal} />
       </Flex>
       <LoginModal isOpen={isOpenLoginModal} onClose={onCloseLoginModal} />

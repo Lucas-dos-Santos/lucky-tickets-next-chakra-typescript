@@ -31,7 +31,7 @@ function WinningModal({ isOpen, onClose }: WinningModalProps) {
         </ModalHeader>
         <ModalCloseButton fontSize={["xs", "xs", "sm", "md"]} />
         <ModalBody>
-          <VStack align="start" spacing={6}>
+          <VStack align="start" spacing={[4, 6]}>
             <Text fontSize={["xs", "sm", "md"]}>
               Nós estamos muito felizes em dizer que você foi o sortudo
               selecionado e vai receber x BNB!

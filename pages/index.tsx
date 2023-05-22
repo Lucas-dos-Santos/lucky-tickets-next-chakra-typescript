@@ -1,15 +1,77 @@
 import Head from 'next/head'
-import { useState } from 'react'
-import React from 'react'
+import React, { useState, useEffect } from "react"
 import { Loading, Header } from '../components'
 import { Box, Button, useColorMode } from "@chakra-ui/react"
-import { useContract } from "@thirdweb-dev/react"
+import { useContract, useContractRead, useAddress } from "@thirdweb-dev/react"
 
 export default function Home() {
   const { colorMode, toggleColorMode } = useColorMode()
+  const [userTickets, setUserTickets] = useState(0)
+  const address = useAddress()
   const { contract, isLoading } = useContract(
     "0xA669C184917fD4977047A10090898E6B60850B25"
-  );
+  )
+
+  const { data: lotteryOperator } = useContractRead(
+    contract,
+    "lotteryOperator"
+  )
+
+  const { data: tickets } = useContractRead(
+    contract,
+    "getTickets"
+  )
+
+  const { data: winnings } = useContractRead(
+    contract,
+    "getWinningsForAddress",
+    address
+  )
+
+    const { data: currentWinningReward } = useContractRead(
+      contract,
+      "currentWinningReward"
+    )
+    const { data: ticketPrice } = useContractRead(contract, "ticketPrice")
+    const { data: expiration } = useContractRead(contract, "expiration")
+    const { data: lastWinner } = useContractRead(contract, "lastWinner")
+    const { data: lastWinnerAmount } = useContractRead(
+      contract,
+      "lastWinnerAmount"
+    )
+    const { data: totalCommission } = useContractRead(
+      contract,
+      "operatorTotalCommission"
+    )
+    const { mutateAsync: drawWinnerTicket } = useContractWrite(
+      contract,
+      "drawWinnerTicket"
+    )
+    const { mutateAsync: withdrawCommission } = useContractWrite(
+      contract,
+      "withdrawCommission"
+    )
+    const { mutateAsync: restartDraw } = useContractWrite(
+      contract,
+      "restartDraw"
+    )
+    const { mutateAsync: withdrawWinnings } = useContractWrite(
+      contract,
+      "withdrawWinnings"
+    )
+    const { mutateAsync: buyTickets } = useContractWrite(
+      contract,
+      "buyTickets"
+    )
+
+  useEffect(() => {
+    if (tickets) {
+      const userTotalTickets = tickets.reduce((total: number, ticketAdress: string) => {
+        return ticketAdress === address ? total + 1 : total
+      }, 0)
+      setUserTickets(userTotalTickets)
+    }
+  }, [tickets, address])
 
   if (isLoading) { return <Loading /> }
   return (
@@ -23,10 +85,15 @@ export default function Home() {
           href="https://fonts.googleapis.com/css2?family=Roboto%3Aital%2Cwght%400%2C100%3B0%2C300%3B0%2C400%3B0%2C500%3B0%2C700%3B0%2C900%3B1%2C100%3B1%2C300%3B1%2C400%3B1%2C500%3B1%2C700%3B1%2C900&display=swap"
         />
       </Head>
-      <Header />
-{/*       <Button onClick={toggleColorMode} colorScheme="teal">
+      <Header
+        address={address}
+        winnings={winnings}
+        userTickets={userTickets}
+        lotteryOperator={lotteryOperator}
+      />
+      {/*       <Button onClick={toggleColorMode} colorScheme="teal">
         Toggle color mode
       </Button> */}
     </>
-  );
+  )
 }
