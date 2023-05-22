@@ -3,6 +3,7 @@ import {
   Logo,
   LoginModal,
   LoginButton,
+  WinningModal,
   AdminsControl,
   TicketsButton
 } from "../components";
@@ -11,7 +12,17 @@ import { Flex, useDisclosure } from "@chakra-ui/react"
 
 function Header() {
   const address = useAddress()
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const {
+    isOpen: isOpenLoginModal,
+    onOpen: onOpenLoginModal,
+    onClose: onCloseLoginModal,
+  } = useDisclosure();
+  const {
+    isOpen: isOpenWinningModal,
+    onOpen: onOpenWinningModal,
+    onClose: onCloseWinningModal,
+  } = useDisclosure();
+
 
   useEffect(() => {
     if (address) { onClose() }
@@ -31,10 +42,11 @@ function Header() {
       <Logo />
       <Flex>
         <AdminsControl />
-        <TicketsButton />
-        <LoginButton address={address} onOpen={onOpen} />
+        <TicketsButton onOpen={onOpenWinningModal} />
+        <LoginButton address={address} onOpen={onOpenLoginModal} />
       </Flex>
-      <LoginModal isOpen={isOpen} onClose={onClose} />
+      <LoginModal isOpen={isOpenLoginModal} onClose={onCloseLoginModal} />
+      <WinningModal isOpen={isOpenWinningModal} onClose={onCloseWinningModal} />
     </Flex>
   );
 }

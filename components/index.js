@@ -3,7 +3,17 @@ import Header from "./Header.tsx"
 import Loading from "./Loading.tsx"
 import LoginModal from "./LoginModal.tsx"
 import LoginButton from "./LoginButton.tsx"
+import WinningModal from "./WinningModal.tsx"
 import TicketsButton from "./TicketsButton.tsx"
 import AdminsControl from "./AdminsControl.tsx"
 
-export { Logo, Header, Loading, LoginModal, LoginButton, TicketsButton, AdminsControl }
+export {
+  Logo,
+  Header,
+  Loading,
+  LoginModal,
+  LoginButton,
+  WinningModal,
+  TicketsButton,
+  AdminsControl,
+}
