@@ -1,5 +1,4 @@
-import React from 'react'
-import { Flex, useDisclosure } from "@chakra-ui/react"
+import React, { useEffect } from 'react'
 import {
   Logo,
   LoginModal,
@@ -7,9 +6,16 @@ import {
   AdminsControl,
   TicketsButton
 } from "../components";
+import { useAddress } from "@thirdweb-dev/react";
+import { Flex, useDisclosure } from "@chakra-ui/react"
 
 function Header() {
+  const address = useAddress()
   const { isOpen, onOpen, onClose } = useDisclosure()
+
+  useEffect(() => {
+    if (address) { onClose() }
+  }, [address])
 
   return (
     <Flex
@@ -26,7 +32,7 @@ function Header() {
       <Flex>
         <AdminsControl />
         <TicketsButton />
-        <LoginButton onOpen={onOpen} />
+        <LoginButton address={address} onOpen={onOpen} />
       </Flex>
       <LoginModal isOpen={isOpen} onClose={onClose} />
     </Flex>

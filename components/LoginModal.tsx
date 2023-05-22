@@ -11,7 +11,7 @@ import {
   ModalContent,
   ModalCloseButton
 } from "@chakra-ui/react";
-import {  } from "react-icons/fa";
+import { useMetamask, useCoinbaseWallet } from "@thirdweb-dev/react";
 
 type LoginModalProps = {
   isOpen: boolean,
@@ -19,6 +19,8 @@ type LoginModalProps = {
 }
 
 function LoginModal({ isOpen, onClose }: LoginModalProps) {
+  const connectWithMetamask = useMetamask()
+  const connectWithCoinbase = useCoinbaseWallet()
   return (
     <Modal isOpen={isOpen} onClose={onClose} size={["xs", "sm", "md", "lg"]}>
       <ModalOverlay />
@@ -30,13 +32,19 @@ function LoginModal({ isOpen, onClose }: LoginModalProps) {
         <ModalBody>
           <VStack w="full">
             <Button
-              size={["xs", "sm", "md", "lg"]}
               w="full"
               colorScheme="orange"
+              onClick={connectWithMetamask}
+              size={["xs", "sm", "md", "lg"]}
             >
               Metamask
             </Button>
-            <Button size={["xs", "sm", "md", "lg"]} w="full" colorScheme="blue">
+            <Button
+              w="full"
+              colorScheme="blue"
+              onClick={connectWithCoinbase}
+              size={["xs", "sm", "md", "lg"]}
+            >
               Coinbase
             </Button>
           </VStack>
