@@ -1,12 +1,15 @@
 import Head from 'next/head'
 import { useState } from 'react'
-import { Box, Button, useColorMode } from "@chakra-ui/react";
-import Loading from '../components/Loading.tsx'
-import Header from "../components/Header.tsx";
+import React from 'react'
+import { Loading, Header } from '../components'
+import { Box, Button, useColorMode } from "@chakra-ui/react"
+import { useContract } from "@thirdweb-dev/react"
 
 export default function Home() {
-  const { colorMode, toggleColorMode } = useColorMode();
-  const [isLoading, setIsLoading] = useState(false);
+  const { colorMode, toggleColorMode } = useColorMode()
+  const { contract, isLoading } = useContract(
+    "0xA669C184917fD4977047A10090898E6B60850B25"
+  );
 
   if (isLoading) { return <Loading /> }
   return (
