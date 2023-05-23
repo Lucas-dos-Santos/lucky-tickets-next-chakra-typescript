@@ -1,12 +1,18 @@
 import Head from 'next/head'
 import React, { useState, useEffect } from "react"
-import { Loading, Header } from '../components'
+import { Loading, Header, MainContent } from "../components";
 import { Box, Button, useColorMode } from "@chakra-ui/react"
-import { useContract, useContractRead, useAddress } from "@thirdweb-dev/react"
+import {
+  useAddress,
+  useContract,
+  useContractRead,
+  useContractWrite,
+} from "@thirdweb-dev/react";
 
 export default function Home() {
   const { colorMode, toggleColorMode } = useColorMode()
   const [userTickets, setUserTickets] = useState(0)
+  const [totalWallets, setTotalWallets] = useState<string[]>([])
   const address = useAddress()
   const { contract, isLoading } = useContract(
     "0xA669C184917fD4977047A10090898E6B60850B25"
@@ -66,10 +72,15 @@ export default function Home() {
 
   useEffect(() => {
     if (tickets) {
+      const wallets: string[] = []
       const userTotalTickets = tickets.reduce((total: number, ticketAdress: string) => {
         return ticketAdress === address ? total + 1 : total
       }, 0)
+      tickets.forEach((wallet: string) => {
+        if (wallets.includes(wallet)) { wallets.push(wallet); }
+      })
       setUserTickets(userTotalTickets)
+      setTotalWallets(wallets)
     }
   }, [tickets, address])
 
@@ -91,9 +102,21 @@ export default function Home() {
         userTickets={userTickets}
         lotteryOperator={lotteryOperator}
       />
+      <MainContent
+        lotteryOperator={lotteryOperator}
+        address={address}
+        currentWinningReward={currentWinningReward}
+        ticketPrice={ticketPrice}
+        expiration={expiration}
+        tickets={tickets}
+        lastWinner={lastWinner}
+        lastWinnerAmount={lastWinnerAmount}
+        totalWallets={totalWallets}
+        buyTickets={buyTickets}
+      />
       {/*       <Button onClick={toggleColorMode} colorScheme="teal">
         Toggle color mode
       </Button> */}
     </>
-  )
+  );
 }
