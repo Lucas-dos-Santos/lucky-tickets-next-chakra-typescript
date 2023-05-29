@@ -108,7 +108,7 @@ function MainContent({
         "calc(100vh - 100px)",
         "calc(100vh - 100px)"
       ]}
-      px={[4, 8, 26, 32, 60, 60]}
+      px={[4, 8, 26, 32, 40, 60, 60]}
     >
       <Flex
         p={4}
