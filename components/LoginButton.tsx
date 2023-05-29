@@ -55,7 +55,7 @@ function LoginButton({ address, onOpen }: LoginButtonProps) {
           aria-label="Logout"
           colorScheme="yellow"
           onClick={disconnect}
-          leftIcon={<FaWallet />}
+          icon={<FaWallet />}
           size={["sm", "sm", "sm", "md", "md", "lg"]}
         />
       )
