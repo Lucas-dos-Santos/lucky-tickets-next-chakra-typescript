@@ -1,6 +1,6 @@
 import React from 'react'
 import { Center, Progress, VStack } from "@chakra-ui/react";
-import Logo from './Logo.tsx'
+import Logo from './Logo'
 
 function Loading() {
   return (
