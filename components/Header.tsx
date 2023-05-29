@@ -14,13 +14,23 @@ type HeaderProps = {
   address: string | undefined;
   winnings: number | undefined
   lotteryOperator: string | undefined;
+  drawWinnerTicket: Function
+  withdrawCommission: Function
+  restartDraw: Function
+  totalCommission: string | undefined
+  withdrawWinnings: Function
 };
 
 function Header({
   address,
   winnings,
   userTickets,
-  lotteryOperator
+  lotteryOperator,
+  drawWinnerTicket,
+  withdrawCommission,
+  restartDraw,
+  totalCommission,
+  withdrawWinnings
 }: HeaderProps) {
   const {
     isOpen: isOpenLoginModal,
@@ -39,6 +49,12 @@ function Header({
     }
   }, [address]);
 
+  useEffect(() => {
+    if (Number(winnings) > 0) {
+      onOpenWinningModal()
+    }
+  }, [winnings])
+
   return (
     <Flex
       h={24}
@@ -53,7 +69,12 @@ function Header({
       <Logo />
       <Flex>
         {address && address == lotteryOperator ? (
-          <AdminsControl />
+          <AdminsControl 
+            drawWinnerTicket={drawWinnerTicket}
+            withdrawCommission={withdrawCommission}
+            restartDraw={restartDraw}
+            totalCommission={totalCommission}
+          />
         ) : (
           <TicketsButton
             winnings={winnings}
@@ -64,7 +85,7 @@ function Header({
         <LoginButton address={address} onOpen={onOpenLoginModal} />
       </Flex>
       <LoginModal isOpen={isOpenLoginModal} onClose={onCloseLoginModal} />
-      <WinningModal isOpen={isOpenWinningModal} onClose={onCloseWinningModal} />
+      <WinningModal isOpen={isOpenWinningModal} onClose={onCloseWinningModal} winnings={winnings} withdrawWinnings={withdrawWinnings}/>
     </Flex>
   );
 }

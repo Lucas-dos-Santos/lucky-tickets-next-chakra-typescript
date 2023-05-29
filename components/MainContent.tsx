@@ -9,6 +9,7 @@ import {
   VStack,
   HStack,
   Heading,
+  useToast,
   NumberInput,
   NumberInputField,
   NumberInputStepper,
@@ -27,7 +28,7 @@ type MainContentProps = {
   lastWinner: string | undefined;
   lastWinnerAmount: string | undefined;
   totalWallets: string[];
-  buyTickets: Function
+  buyTickets: Function;
 };
 function MainContent({
   lotteryOperator,
@@ -43,6 +44,54 @@ function MainContent({
 }: MainContentProps) {
   const [quantity, setQuantity] = useState(1);
   const [loadingBuy, setLoadingBuy] = useState(false);
+  const toast = useToast()
+
+  const onBuyTickets = async () => {
+    if (!ticketPrice) return
+
+    if (!address) {
+      if (!toast.isActive('buy-without-address')) {
+        toast({
+          id: 'buy-without-address',
+          status: 'info',
+          position: 'bottom-right',
+          description: 'Para comprar tickets você precisa entrar com sua carteira primeiro.'
+        })
+      }
+      return
+    }
+
+    setLoadingBuy(true)
+    toast({
+      status: 'info',
+      position: 'bottom-right',
+      description: 'Comprando ticket(s).'
+    })
+
+    try {
+      await buyTickets([{
+        value: ethers.utils.parseEther(
+          String(
+            Number(ethers.utils.formatEther(String(ticketPrice))) * quantity
+          )
+        )
+      }])
+
+      toast({
+        status: 'success',
+        position: 'bottom-right',
+        description: 'Tickets comprados com sucesso.'
+      })
+    } catch {
+      toast({
+        status: 'error',
+        position: 'bottom-right',
+        description: 'Um erro aconteceu ao tentar comprar ticket(s), por favor tente novamente.'
+      })
+    } finally {
+      setLoadingBuy(false)
+    }
+  }
 
   return (
     <Flex
@@ -50,7 +99,15 @@ function MainContent({
       pos="relative"
       overflow="auto"
       direction="column"
-      h="calc(100vh - 100px)"
+      h={[
+        "calc(90vh - 100px)",
+        "calc(90vh - 100px)",
+        "calc(90vh - 100px)",
+        "calc(90vh - 100px)",
+        "calc(90vh - 100px)",
+        "calc(100vh - 100px)",
+        "calc(100vh - 100px)"
+      ]}
       px={[4, 8, 26, 32, 60, 60]}
     >
       <Flex
@@ -84,14 +141,14 @@ function MainContent({
       <Flex
         w="full"
         h="full"
-        minH="650px"
-        mb={["120px", "180px", "300px", "420px", "120px"]}
-        direction={["column", "column", "column", "column", "column", "row"]}
+        minH={['300px', "300px", "300px", "300px", "300px", "650px", "650px"]}
+        mb={["0px", "180px", "300px", "420px", "0px"]}
+        direction={["column", "column", "column", "column", "row", "row", "row"]}
       >
         <Flex
           justify="center"
           direction="column"
-          mt={["14", "14", "14", "14", "14", "0"]}
+          mt={["14", "14", "14", "14", "0", "0", "0"]} 
           w={["full", "full", "full", "full", "full", "50%"]}
           align={["center", "center", "center", "center", "center", "start"]}
         >
@@ -108,7 +165,7 @@ function MainContent({
               <Heading color="white" fontSize={["5xl", "6xl", "7xl", "8xl"]}>
                 {currentWinningReward &&
                   Number(ethers.utils
-                    .formatEther(currentWinningReward.toString()))
+                    .formatEther(String(currentWinningReward)))
                     .toFixed(3)}
               </Heading>
               <Heading
@@ -126,7 +183,7 @@ function MainContent({
             <Badge colorScheme='yellow' fontSize={['10', 'xs', 'sm']}>Participantes: {totalWallets.length}</Badge>
           </HStack>
         </Flex>
-        <Flex mt={["14", "14", "14", "14", "14", "0"]} w={["full", "full", "full", "full", "full", "50%"]}>
+        <Flex mt={["14", "14", "14", "14", "0", "0", "0"]} w={["full", "full", "full", "full", "full", "50%"]}>
           <VStack w='full' justify='center' align={['center', 'center', 'center', 'center', 'center', 'end']}>
             <VStack align='start' p='8' spacing='8' w={['full', 'full', 'full', 'full', 'full', '500px']} bg='#141414' borderRadius='md'>
               <Heading color="white" fontSize={["xl", "2xl", "3xl", "4xl"]}>Comprar Tickets</Heading>
@@ -162,6 +219,26 @@ function MainContent({
                       <Text>BNB</Text>
                     </HStack>
                   </Flex>
+
+                  <Flex w='full' justify='space-between'>
+                    <Text>+ Taxas de rede</Text>
+                    <Text>TBC</Text>
+                  </Flex>
+
+                  <Button
+                    w='full'
+                    colorScheme='yellow'
+                    size={['xs', 'sm', 'md', 'lg']}
+                    disabled={expiration && String(expiration) < String(Date.now()) || loadingBuy || address === lotteryOperator}
+                    isLoading={loadingBuy}
+                    onClick={onBuyTickets}
+                  >
+                    <HStack>
+                      <Text>Comprar {quantity} ticket(s) por</Text>
+                      <Text>{ticketPrice && (Number(ethers.utils.formatEther(String(ticketPrice))) * quantity).toFixed(2)}</Text>
+                      <Text>BNB</Text>
+                    </HStack>
+                  </Button>
                 </VStack>
               </VStack>
             </VStack>

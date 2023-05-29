@@ -34,7 +34,7 @@ function Render({ hours, minutes, seconds }: RenderProps) {
         <Heading color='yellow.400' fontSize={['lg', 'xl', '2xl', '3xl']}>
           {hours}h {minutes}m {seconds}s
         </Heading>
-        <Heading color='yellow.400' fontSize={['lg', 'xl', '2xl', '3xl']}>
+        <Heading color='white' fontSize={['lg', 'xl', '2xl', '3xl']}>
           até o sorteio
         </Heading>
       </HStack>

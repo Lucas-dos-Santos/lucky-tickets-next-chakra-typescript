@@ -15,7 +15,7 @@ export default function Home() {
   const [totalWallets, setTotalWallets] = useState<string[]>([])
   const address = useAddress()
   const { contract, isLoading } = useContract(
-    "0xA669C184917fD4977047A10090898E6B60850B25"
+    "0xd08A702521A8Ee55DE113c72dbf62381C1762E9A"
   )
 
   const { data: lotteryOperator } = useContractRead(
@@ -34,41 +34,41 @@ export default function Home() {
     address
   )
 
-    const { data: currentWinningReward } = useContractRead(
-      contract,
-      "currentWinningReward"
-    )
-    const { data: ticketPrice } = useContractRead(contract, "ticketPrice")
-    const { data: expiration } = useContractRead(contract, "expiration")
-    const { data: lastWinner } = useContractRead(contract, "lastWinner")
-    const { data: lastWinnerAmount } = useContractRead(
-      contract,
-      "lastWinnerAmount"
-    )
-    const { data: totalCommission } = useContractRead(
-      contract,
-      "operatorTotalCommission"
-    )
-    const { mutateAsync: drawWinnerTicket } = useContractWrite(
-      contract,
-      "drawWinnerTicket"
-    )
-    const { mutateAsync: withdrawCommission } = useContractWrite(
-      contract,
-      "withdrawCommission"
-    )
-    const { mutateAsync: restartDraw } = useContractWrite(
-      contract,
-      "restartDraw"
-    )
-    const { mutateAsync: withdrawWinnings } = useContractWrite(
-      contract,
-      "withdrawWinnings"
-    )
-    const { mutateAsync: buyTickets } = useContractWrite(
-      contract,
-      "buyTickets"
-    )
+  const { data: currentWinningReward } = useContractRead(
+    contract,
+    "currentWinningReward"
+  )
+  const { data: ticketPrice } = useContractRead(contract, "ticketPrice")
+  const { data: expiration } = useContractRead(contract, "expiration")
+  const { data: lastWinner } = useContractRead(contract, "lastWinner")
+  const { data: lastWinnerAmount } = useContractRead(
+    contract,
+    "lastWinnerAmount"
+  )
+  const { data: totalCommission } = useContractRead(
+    contract,
+    "operatorTotalCommission"
+  )
+  const { mutateAsync: drawWinnerTicket } = useContractWrite(
+    contract,
+    "drawWinnerTicket"
+  )
+  const { mutateAsync: withdrawCommission } = useContractWrite(
+    contract,
+    "withdrawCommission"
+  )
+  const { mutateAsync: restartDraw } = useContractWrite(
+    contract,
+    "restartDraw"
+  )
+  const { mutateAsync: withdrawWinnings } = useContractWrite(
+    contract,
+    "withdrawWinnings"
+  )
+  const { mutateAsync: buyTickets } = useContractWrite(
+    contract,
+    "buyTickets"
+  )
 
   useEffect(() => {
     if (tickets) {
@@ -77,7 +77,7 @@ export default function Home() {
         return ticketAdress === address ? total + 1 : total
       }, 0)
       tickets.forEach((wallet: string) => {
-        if (wallets.includes(wallet)) { wallets.push(wallet); }
+        if (!wallets.includes(wallet)) { wallets.push(wallet); }
       })
       setUserTickets(userTotalTickets)
       setTotalWallets(wallets)
@@ -98,9 +98,14 @@ export default function Home() {
       </Head>
       <Header
         address={address}
-        winnings={winnings}
-        userTickets={userTickets}
         lotteryOperator={lotteryOperator}
+        userTickets={userTickets}
+        winnings={winnings}
+        drawWinnerTicket={drawWinnerTicket}
+        withdrawCommission={withdrawCommission}
+        restartDraw={restartDraw}
+        totalCommission={totalCommission}
+        withdrawWinnings={withdrawWinnings}
       />
       <MainContent
         lotteryOperator={lotteryOperator}
