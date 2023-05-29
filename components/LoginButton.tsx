@@ -67,7 +67,7 @@ function LoginButton({ address, onOpen }: LoginButtonProps) {
         aria-label="Login"
         colorScheme="yellow"
         onClick={onOpen}
-        leftIcon={<FaArrowRight />}
+        icon={<FaArrowRight />}
         size={["sm", "sm", "sm", "md", "md", "lg"]}
       />
     );
